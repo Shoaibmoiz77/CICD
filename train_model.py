@@ -7,7 +7,7 @@ import itertools
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score
+from sklearn.metrics import confusion_matrix, precision_score, f1_score, recall_score, accuracy_score
 sns.set(style='white')
 
 # Load Data
@@ -35,7 +35,7 @@ X_test = test_data.drop('target', axis=1).values.astype('float32')
 y_test = test_data.loc[:, 'target'].values.astype('int32')
 
 # Logistic Regression
-logreg = LogisticRegression(C=0.0001, solver='lbfgs', max_iter=100')
+logreg = LogisticRegression(C=0.0001, solver='lbfgs', max_iter=100)
 logreg.fit(X_train, y_train)
 predictions_lr = logreg.predict(X_test)
 
@@ -63,6 +63,13 @@ recall_rf = recall_score(y_test, predictions_rf_class, average='micro')
 # Accuracy
 train_acc_rf = rf_reg.score(X_train, y_train) * 100
 test_acc_rf = rf_reg.score(X_test, y_test) * 100
+
+# Accuracy of the models (classification accuracy on the test set)
+accuracy_lr = accuracy_score(y_test, predictions_lr) * 100
+accuracy_rf = accuracy_score(y_test, predictions_rf_class) * 100
+
+print("Logistic Regression Accuracy: {:.2f}%".format(accuracy_lr))
+print("Random Forest Accuracy: {:.2f}%".format(accuracy_rf))
 
 # Confusion Matrix Plotting Function
 def plot_cm(cm, target_name, title="Confusion Matrix", cmap=None, normalize=True):
